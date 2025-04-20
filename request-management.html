@@ -448,12 +448,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Authentication check
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
-            }
 
             // Update user name
             const username = localStorage.getItem('username');

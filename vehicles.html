@@ -490,14 +490,6 @@
                     localStorage.setItem('sidebarCollapsed', 'false');
                 }
             });
-
-            // Existing authentication check
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
-            }
-
             // Update user name
             const username = localStorage.getItem('username');
             if (username) {

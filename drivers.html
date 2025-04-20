@@ -305,13 +305,6 @@
             endDate.addEventListener('change', filterReports);
             searchInput.addEventListener('input', filterReports);
 
-            // Check authentication
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
-            }
-
             // Update user name in the dashboard
             const username = localStorage.getItem('username');
             if (username) {
