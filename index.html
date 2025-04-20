@@ -289,19 +289,6 @@
                 }
             });
 
-            // Existing authentication check
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Update user name in the dashboard
-            const username = localStorage.getItem('username');
-            if (username) {
-                document.querySelector('.user-profile span').textContent = username;
-            }
-
             // Initialize charts
             const usageCtx = document.getElementById('usageChart').getContext('2d');
             const requestsCtx = document.getElementById('requestsChart').getContext('2d');
