@@ -1,385 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - UR Fleet Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin-dashboard.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="auth.js"></script>
-    <style>
-        .charts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .chart-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .chart-title {
-            font-size: 1.2rem;
-            color: var(--ur-blue);
-        }
-
-        /* Sidebar Toggle Styles */
-        .sidebar-toggle {
-            position: fixed;
-            left: 250px;
-            top: 20px;
-            background: var(--ur-blue);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 0 5px 5px 0;
-            cursor: pointer;
-            z-index: 1000;
-            transition: left 0.3s ease;
-        }
-
-        .sidebar-toggle i {
-            font-size: 1.2rem;
-        }
-
-        .sidebar.collapsed {
-            width: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .sidebar.collapsed + .main-content {
-            margin-left: 0;
-        }
-
-        .sidebar-toggle.collapsed {
-            left: 0;
-        }
-
-        .main-content {
-            transition: margin-left 0.3s ease;
-        }
-
-        /* User Dropdown Styles */
-        .user-profile {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 8px 0;
-            min-width: 200px;
-            display: none;
-            z-index: 1000;
-        }
-
-        .user-dropdown.show {
-            display: block;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-
-        .user-dropdown-item {
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--ur-dark-gray);
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-
-        .user-dropdown-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .user-dropdown-divider {
-            height: 1px;
-            background: #eee;
-            margin: 8px 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blockchain Credential Verification</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .hero {
+      background: linear-gradient(to right, #1e3a8a, #3b82f6);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+    }
+    .feature-icon {
+      font-size: 2rem;
+      color: #3b82f6;
+    }
+    .cta-footer {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="loading-spinner"></div>
-    <div class="dashboard-container">
-        <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle" id="sidebarToggle">
-            <i class="fas fa-chevron-left"></i>
-        </button>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Stop Fake Degrees. Verify Credentials with Blockchain.</h1>
+    <p>A secure platform to issue and validate tamper-proof academic records.</p>
+    <a href="#" class="btn btn-light m-2">🎓 University Portal</a>
+    <a href="#" class="btn btn-outline-light m-2">🔍 Verify a Credential</a>
+  </section>
 
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="./image/logo_for_ur.png" alt="University of Rwanda Logo" class="logo">
-                <h2>FMS Admin</h2>
-            </div>
-            <ul class="nav-links">
-                <li class="active">
-                    <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="vehicles.html"><i class="fas fa-car"></i> Vehicles</a>
-                </li>
-                <li>
-                    <a href="drivers.html"><i class="fas fa-clipboard-list"></i> Driver Reports</a>
-                </li>
-                <li>
-                    <a href="request-management.html"><i class="fas fa-tasks"></i> Request Management</a>
-                </li>
-                <li>
-                    <a href="request-overview.html"><i class="fas fa-chart-pie"></i> Request Overview</a>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <a href="#profile"><i class="fas fa-user-circle"></i> Admin Profile</a>
-                <a href="login.html" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <header class="top-bar">
-                <div class="search-bar">
-                </div>
-                <div class="user-info">
-                    <span class="notifications">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </span>
-                    <div class="user-profile">
-                        <img src="./image/avatar.png" alt="Admin Profile">
-                        <span>Admin Name</span>
-                        <!-- User Dropdown Menu -->
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="#profile" class="user-dropdown-item">
-                                <i class="fas fa-user"></i>
-                                My Profile
-                            </a>
-                            <a href="settings.html" class="user-dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
-                            </a>
-                            <div class="user-dropdown-divider"></div>
-                            <a href="#help" class="user-dropdown-item">
-                                <i class="fas fa-question-circle"></i>
-                                Help & Support
-                            </a>
-                            <div class="user-dropdown-divider"></div>
-                            <a href="login.html" class="user-dropdown-item logout-link" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div class="dashboard-content">
-                <!-- Quick Stats -->
-                <section class="stats-grid">
-                    <a href="vehicles.html" class="stat-card">
-                        <i class="fas fa-car"></i>
-                        <div class="stat-info">
-                            <h3>Vehicles</h3>
-                            <p>24 Total</p>
-                        </div>
-                    </a>
-                    <a href="drivers.html" class="stat-card">
-                        <i class="fas fa-user"></i>
-                        <div class="stat-info">
-                            <h3>Drivers</h3>
-                            <p>18 Active</p>
-                        </div>
-                    </a>
-                    <a href="request-management.html" class="stat-card">
-                        <i class="fas fa-tasks"></i>
-                        <div class="stat-info">
-                            <h3>Request Management</h3>
-                            <p>5 Pending</p>
-                        </div>
-                    </a>
-                    <a href="request-overview.html" class="stat-card">
-                        <i class="fas fa-chart-pie"></i>
-                        <div class="stat-info">
-                            <h3>Request Overview</h3>
-                            <p>156 Total</p>
-                        </div>
-                    </a>
-                </section>
-
-                <!-- Charts Section -->
-                <section class="charts-container">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Vehicle Usage</h3>
-                            <select id="usageTimeRange" class="time-range-select">
-                                <option value="week">This Week</option>
-                                <option value="month">This Month</option>
-                                <option value="year">This Year</option>
-                            </select>
-                        </div>
-                        <canvas id="usageChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Vehicle Requests</h3>
-                            <select id="requestsTimeRange" class="time-range-select">
-                                <option value="week">This Week</option>
-                                <option value="month">This Month</option>
-                                <option value="year">This Year</option>
-                            </select>
-                        </div>
-                        <canvas id="requestsChart"></canvas>
-                    </div>
-                </section>
-            </div>
-        </main>
+  <!-- Who It's For -->
+  <section class="container py-5">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <h5>🎓 Universities</h5>
+        <p>Issue secure, blockchain-backed certificates.</p>
+      </div>
+      <div class="col-md-4">
+        <h5>💼 Employers</h5>
+        <p>Instantly verify degrees and transcripts.</p>
+      </div>
+      <div class="col-md-4">
+        <h5>🧍 Students</h5>
+        <p>Control and share your credentials anywhere.</p>
+      </div>
     </div>
+  </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar Toggle Functionality
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const mainContent = document.querySelector('.main-content');
+  <!-- How It Works -->
+  <section class="container py-5 text-center">
+    <h2>How It Works</h2>
+    <div class="row pt-4">
+      <div class="col-md-4">
+        <h5>1. Issue</h5>
+        <p>University issues a digital certificate.</p>
+      </div>
+      <div class="col-md-4">
+        <h5>2. Receive</h5>
+        <p>Student receives a verifiable QR-linked record.</p>
+      </div>
+      <div class="col-md-4">
+        <h5>3. Verify</h5>
+        <p>Employer scans and verifies in seconds.</p>
+      </div>
+    </div>
+  </section>
 
-            // Check and set initial sidebar state from localStorage
-            const sidebarState = localStorage.getItem('sidebarCollapsed');
-            if (sidebarState === 'true') {
-                sidebar.classList.add('collapsed');
-                sidebarToggle.classList.add('collapsed');
-                sidebarToggle.querySelector('i').className = 'fas fa-chevron-right';
-            }
+  <!-- Features -->
+  <section class="container py-5">
+    <h2 class="text-center mb-4">Key Features</h2>
+    <div class="row text-center">
+      <div class="col-md-3">
+        <div class="feature-icon">🔗</div>
+        <p>Blockchain-backed credentials</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon">📁</div>
+        <p>Decentralized file storage (IPFS)</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon">📤</div>
+        <p>Student dashboard to manage & share</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon">🔍</div>
+        <p>Instant verification with QR or ID</p>
+      </div>
+    </div>
+  </section>
 
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                sidebarToggle.classList.toggle('collapsed');
-                
-                // Change icon based on state
-                const icon = sidebarToggle.querySelector('i');
-                if (sidebar.classList.contains('collapsed')) {
-                    icon.className = 'fas fa-chevron-right';
-                    localStorage.setItem('sidebarCollapsed', 'true');
-                } else {
-                    icon.className = 'fas fa-chevron-left';
-                    localStorage.setItem('sidebarCollapsed', 'false');
-                }
-            });
+  <!-- Call to Action Footer -->
+  <section class="cta-footer">
+    <h3>Ready to Join the Future of Credentials?</h3>
+    <p>Secure, verify, and scale with blockchain-powered certification.</p>
+    <a href="#" class="btn btn-light m-2">Get Started as a School</a>
+    <a href="#" class="btn btn-outline-light m-2">Verify a Certificate</a>
+  </section>
 
-            // Initialize charts
-            const usageCtx = document.getElementById('usageChart').getContext('2d');
-            const requestsCtx = document.getElementById('requestsChart').getContext('2d');
-
-            // Vehicle Usage Chart (Bar Chart)
-            const usageChart = new Chart(usageCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Hours Used',
-                        data: [8, 6, 7, 9, 8, 4, 2],
-                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
-                        borderColor: 'rgba(0, 51, 102, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Hours'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Vehicle Requests Chart (Line Chart)
-            const requestsChart = new Chart(requestsCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Number of Requests',
-                        data: [5, 7, 3, 6, 8, 2, 1],
-                        fill: false,
-                        borderColor: 'rgba(196, 30, 58, 1)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Requests'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Time range selectors functionality
-            document.getElementById('usageTimeRange').addEventListener('change', function(e) {
-                // Here you would typically fetch new data based on the selected time range
-                console.log('Usage time range changed:', e.target.value);
-            });
-
-            document.getElementById('requestsTimeRange').addEventListener('change', function(e) {
-                // Here you would typically fetch new data based on the selected time range
-                console.log('Requests time range changed:', e.target.value);
-            });
-
-            // User Dropdown Toggle
-            const userProfile = document.querySelector('.user-profile');
-            const userDropdown = document.getElementById('userDropdown');
-            
-            userProfile.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
-
-            // Handle logout
-            document.getElementById('logoutBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('username');
-                window.location.href = 'login.html';
-            });
-        });
-    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
+
