@@ -2,8 +2,10 @@ package main
 
 import (
 	"SomaBackend/config"
+	"SomaBackend/database"
 	"SomaBackend/routes"
 
+	"github.com/Mr-Ndi/SomaBackend/database"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +17,7 @@ func main() {
 
 	// Connect to DB
 	config.ConnectDB()
+	database.AutoMigrate()
 
 	// Register all routes
 	routes.RegisterRoutes(r)
