@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/Mr-Ndi/SomaBackend/config"
-	"github.com/Mr-Ndi/SomaBackend/database"
-	"github.com/Mr-Ndi/SomaBackend/routes"
+	"fmt"
+
+	"somagov/config"
+	"somagov/database"
+	"somagov/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-
-	// Load ENV
-	config.LoadEnv()
 
 	// Connect to DB
 	config.ConnectDB()
@@ -22,5 +22,6 @@ func main() {
 	routes.RegisterRoutes(r)
 
 	// Start server
+	fmt.Println("http://localhost:8080")
 	r.Run(":8080")
 }

@@ -1,30 +1,52 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	models "github.com/Mr-Ndi/SomaBackend/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
+// Global DB instance
 var DB *gorm.DB
 
-func LoadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("No .env file found, using system environment")
-	}
-}
-
 func ConnectDB() {
-	dsn := os.Getenv("DB_DSN")
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Failed to connect to DB:", err)
+	// Get the database URL from environment variables
+	dsn := os.Getenv("DATABASE_URL")
+	// fmt.Println("DATABASE_URL:", dsn)
+
+	if dsn == "" {
+		log.Fatal("--------------------------------------------------------------")
+		log.Fatal("DATABASE_URL is not set in environment variables")
+		log.Fatal("--------------------------------------------------------------")
 	}
+
+	// Connect to PostgreSQL
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+		// NamingStrategy: schema.NamingStrategy{
+		// 	SingularTable: true,
+		// },
+	})
+	if err != nil {
+		log.Fatal("--------------------------------------------------------------")
+		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatal("--------------------------------------------------------------")
+	}
+
+	// Run AutoMigrate to apply schema changes
+	err = db.AutoMigrate(&models.User{}, &models.Agency{}, &models.Category{}, &models.Complaint{}, &models.Response{})
+	if err != nil {
+		log.Fatalf("Migration failed: %v", err)
+	}
+
+	// Assign DB instance to global variable
 	DB = db
-	fmt.Println("Database connection established.")
+	log.Println("--------------------------------------------------------------")
+	log.Println("Connected to PostgreSQL and migrated successfully!")
+	log.Println("--------------------------------------------------------------")
 }

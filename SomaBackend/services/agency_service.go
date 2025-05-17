@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/Mr-Ndi/SomaBackend/config"
-	"github.com/Mr-Ndi/SomaBackend/models"
+	"somagov/config"
+	"somagov/models"
 )
 
 func GetAllAgencies() ([]models.Agency, error) {
