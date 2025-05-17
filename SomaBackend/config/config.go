@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -14,36 +15,28 @@ import (
 // Global DB instance
 var DB *gorm.DB
 
-func ConnectDB() {
-	// Get the database URL from environment variables
+func ConnectDB() error {
 	dsn := os.Getenv("DATABASE_URL")
-	// fmt.Println("DATABASE_URL:", dsn)
 
 	if dsn == "" {
-		log.Fatal("--------------------------------------------------------------")
-		log.Fatal("DATABASE_URL is not set in environment variables")
-		log.Fatal("--------------------------------------------------------------")
+		return fmt.Errorf("DATABASE_URL is not set in environment variables")
 	}
 
-	// Connect to PostgreSQL
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
-		log.Fatal("--------------------------------------------------------------")
-		log.Fatalf("Failed to connect to database: %v", err)
-		log.Fatal("--------------------------------------------------------------")
+		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	// Run AutoMigrate to apply schema changes
 	err = db.AutoMigrate(&models.User{}, &models.Agency{}, &models.Category{}, &models.Complaint{}, &models.Response{})
 	if err != nil {
-		log.Fatalf("Migration failed: %v", err)
+		return fmt.Errorf("migration failed: %w", err)
 	}
 
-	// Assign DB instance to global variable
 	DB = db
 	log.Println("--------------------------------------------------------------")
 	log.Println("Connected to PostgreSQL and migrated successfully!")
 	log.Println("--------------------------------------------------------------")
+	return nil
 }

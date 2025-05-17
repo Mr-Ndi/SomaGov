@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"somagov/config"
-	"somagov/database"
 	"somagov/routes"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,6 @@ func main() {
 
 	// Connect to DB
 	config.ConnectDB()
-	database.AutoMigrate()
 
 	// Register all routes
 	routes.RegisterRoutes(r)
