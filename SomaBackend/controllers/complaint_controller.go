@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Mr-Ndi/SomaBackend/models"
-	"github.com/Mr-Ndi/SomaBackend/services"
+	"somagov/models"
+	"somagov/services"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/Mr-Ndi/SomaBackend/controllers"
-	"github.com/Mr-Ndi/SomaBackend/middleware"
+	"somagov/controllers"
+	"somagov/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 

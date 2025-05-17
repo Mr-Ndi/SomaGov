@@ -3,7 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/Mr-Ndi/SomaBackend/services"
+	"somagov/services"
+
 	"github.com/gin-gonic/gin"
 )
 

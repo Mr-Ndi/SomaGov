@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/Mr-Ndi/SomaBackend/config"
-	"github.com/Mr-Ndi/SomaBackend/models"
+	"somagov/config"
+	"somagov/models"
 )
 
 func AutoMigrate() {

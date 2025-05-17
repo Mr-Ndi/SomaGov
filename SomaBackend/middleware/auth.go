@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Mr-Ndi/SomaBackend/utils"
+	"somagov/utils"
+
 	"github.com/gin-gonic/gin"
 )
 

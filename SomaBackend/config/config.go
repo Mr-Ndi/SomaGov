@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	models "github.com/Mr-Ndi/SomaBackend/models"
+	models "somagov/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,9 +28,6 @@ func ConnectDB() {
 	// Connect to PostgreSQL
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
-		// NamingStrategy: schema.NamingStrategy{
-		// 	SingularTable: true,
-		// },
 	})
 	if err != nil {
 		log.Fatal("--------------------------------------------------------------")
