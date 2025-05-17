@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"somagov/config"
 	"somagov/routes"
@@ -13,13 +14,17 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	// Connect to DB
-	config.ConnectDB()
+	// Connect to DB and handle any errors
+	if err := config.ConnectDB(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
 
 	// Register all routes
 	routes.RegisterRoutes(r)
 
 	// Start server
-	fmt.Println("http://localhost:8080")
-	r.Run(":8080")
+	fmt.Println("Server running at: http://localhost:8080")
+	if err := r.Run(":8080"); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

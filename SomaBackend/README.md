@@ -114,17 +114,11 @@ SomaGov is designed with Rwanda in mind. Agencies, categories, and complaint log
 
 ## 📜 License
 
-MIT License
+Under development
 
 ---
 
 ## 👨‍💻 Author
 
-**Mr-Ndi** – [@your-twitter-or-link](#)
+**Mr-Ndi** – [https://www.linkedin.com/in/mr-ndi/](#)
 
-```
-
----
-
-Let me know if you'd like a version that includes badges, Swagger docs, Docker instructions, or if you're planning to open-source it — I can tailor it further.
-```
