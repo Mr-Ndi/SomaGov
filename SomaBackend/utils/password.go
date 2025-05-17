@@ -44,17 +44,17 @@ func CheckPasswordHash(password, encodedHash string) bool {
 	}
 
 	var mem, t, p uint32
-	_, err := fmt.Sscanf(parts[3], "m=%d,t=%d,p=%d", &mem, &t, &p)
+	_, err := fmt.Sscanf(parts[2], "m=%d,t=%d,p=%d", &mem, &t, &p)
 	if err != nil {
 		return false
 	}
 
-	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
+	salt, err := base64.RawStdEncoding.DecodeString(parts[3])
 	if err != nil {
 		return false
 	}
 
-	hash, err := base64.RawStdEncoding.DecodeString(parts[5])
+	hash, err := base64.RawStdEncoding.DecodeString(parts[4])
 	if err != nil {
 		return false
 	}
