@@ -1,11 +1,10 @@
 package main
 
 import (
-	"SomaBackend/config"
-	"SomaBackend/database"
-	"SomaBackend/routes"
-
+	"github.com/Mr-Ndi/SomaBackend/config"
 	"github.com/Mr-Ndi/SomaBackend/database"
+	"github.com/Mr-Ndi/SomaBackend/routes"
+
 	"github.com/gin-gonic/gin"
 )
 
