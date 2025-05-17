@@ -17,8 +17,7 @@ func CreateComplaint(c *gin.Context) {
 		return
 	}
 
-	// Here we are Simulating the act of getting user from token
-	userID := c.GetUint("user_id")
+	userID := c.MustGet("user_id").(uint)
 	complaint.UserID = userID
 
 	if err := services.CreateComplaint(&complaint); err != nil {
@@ -26,7 +25,10 @@ func CreateComplaint(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Complaint submitted", "ticket": complaint.TicketCode})
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Complaint submitted successfully",
+		"ticket":  complaint.TicketCode,
+	})
 }
 
 func GetMyComplaints(c *gin.Context) {
