@@ -11,4 +11,4 @@ func RegisterAIRoutes(rg *gin.RouterGroup) {
 	{
 		ai.POST("/translate", controllers.TranslateTextHandler)
 	}
-} 
+}

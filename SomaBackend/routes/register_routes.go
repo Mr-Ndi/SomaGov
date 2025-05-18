@@ -4,15 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(r *gin.Engine) {
-	api := r.Group("/api")
+func RegisterRoutes(r *gin.RouterGroup) {
+	// api := r.Group("/api")
 
 	// Authentication (public API)
-	RegisterAuthRoutes(api)
+	RegisterAuthRoutes(r)
 
 	// Complaint APIs (authenticated API)
-	RegisterCitizenRoutes(api)
+	RegisterCitizenRoutes(r)
 
 	// Metadata (public API)
-	RegisterMetaRoutes(api)
+	RegisterMetaRoutes(r)
 }
