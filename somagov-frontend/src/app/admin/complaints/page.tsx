@@ -13,13 +13,19 @@ export default function AdminComplaints() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
       const token = localStorage.getItem('token');
-      const data = await apiRequest('/admin/complaints?status=open&sort=latest', 'GET', undefined, token || undefined);
+      const data = await apiRequest<Complaint[]>('/admin/complaints?status=open&sort=latest', 'GET', undefined, token || undefined);
       setComplaints(data || []);
-    };
-    fetchData();
-  }, []);
+    } catch (err) {
+      console.error('Failed to fetch complaints:', err);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   return (
     <main className="p-8 bg-background min-h-screen">
