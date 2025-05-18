@@ -12,7 +12,8 @@ type Complaint struct {
 	Category    Category `gorm:"foreignKey:CategoryID"`
 	AgencyID    uint     `json:"agency_id"`
 	Agency      Agency   `gorm:"foreignKey:AgencyID"`
-	Message     string   `json:"message"`
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
 	Status      string   `json:"status"`
 	TicketCode  string   `gorm:"uniqueIndex"`
 	Attachments string   `json:"attachments"`
