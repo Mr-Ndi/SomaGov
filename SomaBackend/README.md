@@ -15,6 +15,25 @@ SomaGov is a citizen engagement platform that enables the public to submit feedb
 - 🧭 RESTful API with JWT authentication
 - 📦 Built with Go + Gin + PostgreSQL + GORM
 
+### Translation Service
+The platform includes a powerful translation service that can translate text between different languages. This feature is particularly useful for:
+- Translating official documents
+- Making government services accessible to non-native speakers
+- Supporting multilingual communication
+
+To use the translation service, you'll need to:
+1. Set up your OpenAI API key in the environment variables
+2. Make a request to the translation endpoint
+
+Example translation request:
+```json
+{
+    "text": "Hello, how can I help you?",
+    "from_lang": "English",
+    "to_lang": "Somali"
+}
+```
+
 ---
 
 ## 🚀 Getting Started
@@ -33,6 +52,7 @@ Create a `.env` file:
 ```env
 DATABASE_URL=postgres://<user>:<password>@<host>/<dbname>?sslmode=require
 HUGGINGFACE_TOKEN=your_huggingface_api_token
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 Or use individual values if preferred:
@@ -44,9 +64,11 @@ DB_PASSWORD=...
 DB_NAME=...
 DB_SSLMODE=require
 HUGGINGFACE_TOKEN=your_huggingface_api_token
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 > 💡 `HUGGINGFACE_TOKEN` is used for AI features like complaint categorization and sentiment analysis.
+> 💡 `OPENAI_API_KEY` is used for the translation service.
 
 ### 3. Run locally with Air (for development)
 
@@ -108,16 +130,27 @@ SomaBackend/
 ### 1. 🔐 Hugging Face API Token
 
 - Go to: [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
-- Click **“New token”**
+- Click **"New token"**
 - Give it a name (e.g., `somagov-ai`)
-- Set role: **“Read”**
+- Set role: **"Read"**
 - Copy the token and add it to your `.env` file as:
 
 ```env
 HUGGINGFACE_TOKEN=your_generated_token_here
 ```
 
-### 2. 🗣 LibreTranslate
+### 2. 🗣 OpenAI API Key
+
+- Go to: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- Click **"Create new secret key"**
+- Give it a name (e.g., `somagov-translation`)
+- Copy the key and add it to your `.env` file as:
+
+```env
+OPENAI_API_KEY=your_generated_key_here
+```
+
+### 3. 🗣 LibreTranslate
 
 You're using a public instance:
 
@@ -141,6 +174,7 @@ If you want to **self-host** LibreTranslate:
 * `GET    /api/complaints/:id` – View a complaint
 * `GET    /api/agencies` – List agencies
 * `GET    /api/categories` – List categories
+* `POST   /api/ai/translate` – Translate text between languages
 
 ---
 
