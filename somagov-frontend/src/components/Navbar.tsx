@@ -32,8 +32,8 @@ export default function Navbar() {
           <Link href="/" className="text-gray-700 hover:text-primary">
             Home
           </Link>
-          <Link href="/complaints/new" className="text-gray-700 hover:text-primary">
-            Submit
+          <Link href="/about" className="text-gray-700 hover:text-primary">
+            About Us
           </Link>
           {isLoggedIn && (
             <Link href="/complaints" className="text-gray-700 hover:text-primary">

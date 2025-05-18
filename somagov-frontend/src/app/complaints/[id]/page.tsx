@@ -3,15 +3,24 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { apiRequest } from '@/utils/api';
 
+type Complaint = {
+  id: string;
+  location: string;
+  message: string;
+  status: string;
+  response?: string;
+  created_at?: string;
+};
+
 export default function ComplaintDetailPage() {
   const { id } = useParams();
-  const [complaint, setComplaint] = useState<any>(null);
+  const [complaint, setComplaint] = useState<Complaint | null>(null);
 
   useEffect(() => {
     const fetchComplaint = async () => {
       const token = localStorage.getItem('token');
       const data = await apiRequest(`/complaints/${id}`, 'GET', undefined, token || undefined);
-      setComplaint(data);
+      setComplaint(data as Complaint);
     };
     fetchComplaint();
   }, [id]);

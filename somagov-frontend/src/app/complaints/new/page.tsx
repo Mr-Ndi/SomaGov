@@ -1,9 +1,18 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { apiRequest } from '@/utils/api';
+import { useRouter } from 'next/navigation';
 
 export default function NewComplaintPage() {
   const [form, setForm] = useState({ location: '', message: '' });
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+    }
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,7 +21,7 @@ export default function NewComplaintPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const result = await apiRequest('/complaints', 'POST', form, token || undefined);
+    const result = await apiRequest('/complaints', 'POST', form, token || undefined) as any;
     alert(result.message || 'Complaint submitted.');
   };
 

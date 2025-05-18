@@ -1,6 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Footer from './Footer';
+import Navbar from '@/components/Navbar';
+import GradientWrapper from '@/components/GradientWrapper';
 
 export const metadata: Metadata = {
   title: 'SomaGov',
@@ -23,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        {children}
+        <Navbar />
+        <GradientWrapper>
+          {children}
+        </GradientWrapper>
         <Footer />
       </body>
     </html>

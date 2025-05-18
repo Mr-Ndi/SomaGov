@@ -25,6 +25,13 @@ export default function MyComplaintsPage() {
   return (
     <main className="p-8 bg-background min-h-screen">
       <h1 className="text-2xl font-bold text-primary mb-6">My Complaints</h1>
+      
+      <div className="flex justify-center mb-6">
+        <Link href="/complaints/new" className="bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+          Submit New Complaint
+        </Link>
+      </div>
+
       <div className="space-y-4">
         {complaints.map(c => (
           <Link href={`/complaints/${c.id}`} key={c.id}>
@@ -35,6 +42,12 @@ export default function MyComplaintsPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="flex justify-center mt-6">
+        <Link href="/complaints/new" className="bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+          Submit New Complaint
+        </Link>
       </div>
     </main>
   );
