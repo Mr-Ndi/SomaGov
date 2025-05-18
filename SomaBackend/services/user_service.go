@@ -115,6 +115,11 @@ func SeedAdmin(db *gorm.DB) error {
 }
 
 func UpdateUserPassword(email, newPassword string) error {
+	// Test the password hashing and verification
+	if err := utils.TestPasswordHash(newPassword); err != nil {
+		return fmt.Errorf("password hash test failed: %w", err)
+	}
+
 	hashedPass, err := utils.HashPassword(newPassword)
 	if err != nil {
 		return fmt.Errorf("failed to hash password: %w", err)
