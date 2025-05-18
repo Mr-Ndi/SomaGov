@@ -1,43 +1,41 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
-	"somagov/models"
 	"somagov/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateComplaint(c *gin.Context) {
-	var complaint models.Complaint
-	if err := c.ShouldBindJSON(&complaint); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid input: %v", err)})
-		return
-	}
+// func CreateComplaint(c *gin.Context) {
+// 	var complaint models.Complaint
+// 	if err := c.ShouldBindJSON(&complaint); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid input: %v", err)})
+// 		return
+// 	}
 
-	// Get user ID from JWT token
-	userID, exists := c.Get("user_id")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
-		return
-	}
-	complaint.UserID = userID.(uint)
+// 	// Get user ID from JWT token
+// 	userID, exists := c.Get("user_id")
+// 	if !exists {
+// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+// 		return
+// 	}
+// 	complaint.UserID = userID.(uint)
 
-	// Create the complaint
-	if err := services.CreateComplaint(&complaint); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to submit complaint: %v", err)})
-		return
-	}
+// 	// Create the complaint
+// 	if err := services.CreateComplaint(&complaint); err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to submit complaint: %v", err)})
+// 		return
+// 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "Complaint submitted successfully",
-		"ticket":  complaint.TicketCode,
-		"data":    complaint,
-	})
-}
+// 	c.JSON(http.StatusCreated, gin.H{
+// 		"message": "Complaint submitted successfully",
+// 		"ticket":  complaint.TicketCode,
+// 		"data":    complaint,
+// 	})
+// }
 
 func GetMyComplaints(c *gin.Context) {
 	userID := c.GetUint("user_id")

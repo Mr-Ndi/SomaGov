@@ -37,7 +37,7 @@ func CreateComplaint(complaint *models.Complaint) error {
 	} else if len(prediction.Labels) > 0 {
 		// Find the category with the highest score
 		bestCategory := prediction.Labels[0]
-		for i, cat := range categories {
+		for _, cat := range categories {
 			if cat.Name == bestCategory {
 				complaint.CategoryID = cat.ID
 				complaint.AgencyID = cat.AgencyID
