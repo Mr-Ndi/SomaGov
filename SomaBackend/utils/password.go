@@ -38,29 +38,40 @@ func HashPassword(password string) (string, error) {
 
 // CheckPasswordHash function izajya verifies password against the encoded Argon2 hash tukabona gukomeza
 func CheckPasswordHash(password, encodedHash string) bool {
+	fmt.Printf("Checking password hash. Hash format: %s\n", encodedHash)
 	parts := strings.Split(encodedHash, "$")
 	if len(parts) != 6 {
+		fmt.Printf("Invalid hash format: expected 6 parts, got %d\n", len(parts))
 		return false
 	}
 
+	// Extract parameters from the format string
+	paramStr := parts[2]
 	var mem, t, p uint32
-	_, err := fmt.Sscanf(parts[2], "m=%d,t=%d,p=%d", &mem, &t, &p)
+	_, err := fmt.Sscanf(paramStr, "m=%d,t=%d,p=%d", &mem, &t, &p)
 	if err != nil {
+		fmt.Printf("Failed to parse parameters: %v\n", err)
 		return false
 	}
+
+	fmt.Printf("Parsed parameters: m=%d, t=%d, p=%d\n", mem, t, p)
 
 	salt, err := base64.RawStdEncoding.DecodeString(parts[3])
 	if err != nil {
+		fmt.Printf("Failed to decode salt: %v\n", err)
 		return false
 	}
 
 	hash, err := base64.RawStdEncoding.DecodeString(parts[4])
 	if err != nil {
+		fmt.Printf("Failed to decode hash: %v\n", err)
 		return false
 	}
 
 	newHash := argon2.IDKey([]byte(password), salt, t, mem, uint8(p), uint32(len(hash)))
-	return subtleCompare(hash, newHash)
+	result := subtleCompare(hash, newHash)
+	fmt.Printf("Password verification result: %v\n", result)
+	return result
 }
 
 // subtleCompare checks byte slices in constant time
