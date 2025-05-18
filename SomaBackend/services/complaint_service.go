@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"somagov/config"
@@ -8,13 +9,34 @@ import (
 )
 
 func CreateComplaint(complaint *models.Complaint) error {
+	// Validate required fields
+	if complaint.Title == "" {
+		return fmt.Errorf("title is required")
+	}
+	if complaint.Description == "" {
+		return fmt.Errorf("description is required")
+	}
+	if complaint.CategoryID == 0 {
+		return fmt.Errorf("category_id is required")
+	}
+	if complaint.AgencyID == 0 {
+		return fmt.Errorf("agency_id is required")
+	}
+
+	// Set default values
 	complaint.Status = "submitted"
 	complaint.CreatedAt = time.Now()
 	complaint.UpdatedAt = time.Now()
 
-	// Igisigaye: Add AI categorization + agency assignment if needed
+	// Generate ticket code (you can customize this format)
+	complaint.TicketCode = fmt.Sprintf("TKT-%d", time.Now().Unix())
 
-	return config.DB.Create(complaint).Error
+	// Create the complaint
+	if err := config.DB.Create(complaint).Error; err != nil {
+		return fmt.Errorf("failed to create complaint: %w", err)
+	}
+
+	return nil
 }
 
 func GetComplaintByID(id uint) (*models.Complaint, error) {

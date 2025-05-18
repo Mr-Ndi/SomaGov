@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,21 +14,28 @@ import (
 func CreateComplaint(c *gin.Context) {
 	var complaint models.Complaint
 	if err := c.ShouldBindJSON(&complaint); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid input: %v", err)})
 		return
 	}
 
-	userID := c.MustGet("user_id").(uint)
-	complaint.UserID = userID
+	// Get user ID from JWT token
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+	complaint.UserID = userID.(uint)
 
+	// Create the complaint
 	if err := services.CreateComplaint(&complaint); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to submit complaint"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to submit complaint: %v", err)})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Complaint submitted successfully",
 		"ticket":  complaint.TicketCode,
+		"data":    complaint,
 	})
 }
 
