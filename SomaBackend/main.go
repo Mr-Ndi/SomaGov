@@ -32,6 +32,9 @@ func main() {
 
 	// Register all routes
 	routes.RegisterRoutes(r)
+	routes.RegisterAuthRoutes(r)
+	routes.RegisterUserRoutes(r)
+	routes.RegisterAIRoutes(r)
 
 	// Start server
 	fmt.Println("Server running at: http://localhost:8080")

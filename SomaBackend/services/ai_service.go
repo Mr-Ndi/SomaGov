@@ -77,56 +77,91 @@ func PredictCategory(text string, categories []string) (*CategoryPrediction, err
 	return &prediction, nil
 }
 
-// TranslateText translates text between languages using LibreTranslate
-func TranslateText(text, sourceLang, targetLang string) (string, error) {
-	// Prepare request body
-	requestBody := map[string]string{
-		"q":      text,
-		"source": sourceLang,
-		"target": targetLang,
-		"format": "text",
+type TranslationRequest struct {
+	Text     string `json:"text"`
+	FromLang string `json:"from_lang"`
+	ToLang   string `json:"to_lang"`
+}
+
+type TranslationResponse struct {
+	TranslatedText string `json:"translated_text"`
+}
+
+func TranslateText(text, fromLang, toLang string) (string, error) {
+	apiKey := os.Getenv("OPENAI_API_KEY")
+	if apiKey == "" {
+		return "", fmt.Errorf("OpenAI API key not found")
 	}
 
-	jsonBody, err := json.Marshal(requestBody)
+	url := "https://api.openai.com/v1/chat/completions"
+	
+	prompt := fmt.Sprintf("Translate the following text from %s to %s: %s", fromLang, toLang, text)
+	
+	requestBody := map[string]interface{}{
+		"model": "gpt-3.5-turbo",
+		"messages": []map[string]string{
+			{
+				"role":    "system",
+				"content": "You are a professional translator. Translate the given text accurately while maintaining the original meaning and context.",
+			},
+			{
+				"role":    "user",
+				"content": prompt,
+			},
+		},
+		"temperature": 0.3,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal request body: %w", err)
+		return "", fmt.Errorf("error marshaling request: %v", err)
 	}
 
-	// Create request
-	req, err := http.NewRequest(
-		"POST",
-		aiConfig.LibreTranslateURL,
-		bytes.NewBuffer(jsonBody),
-	)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
+		return "", fmt.Errorf("error creating request: %v", err)
 	}
 
-	// Set headers
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
 
-	// Send request
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("failed to send request: %w", err)
+		return "", fmt.Errorf("error making request: %v", err)
 	}
 	defer resp.Body.Close()
 
-	// Check response status
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("translation request failed with status: %d", resp.StatusCode)
+		return "", fmt.Errorf("API request failed with status: %d", resp.StatusCode)
 	}
 
-	// Parse response
-	var result struct {
-		TranslatedText string `json:"translatedText"`
-	}
+	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response: %w", err)
+		return "", fmt.Errorf("error decoding response: %v", err)
 	}
 
-	return result.TranslatedText, nil
+	choices, ok := result["choices"].([]interface{})
+	if !ok || len(choices) == 0 {
+		return "", fmt.Errorf("invalid response format")
+	}
+
+	firstChoice, ok := choices[0].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("invalid choice format")
+	}
+
+	message, ok := firstChoice["message"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("invalid message format")
+	}
+
+	content, ok := message["content"].(string)
+	if !ok {
+		return "", fmt.Errorf("invalid content format")
+	}
+
+	return content, nil
 }
 
 // AnalyzeSentiment uses Hugging Face to detect sentiment in text

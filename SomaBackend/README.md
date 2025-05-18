@@ -11,6 +11,7 @@ SomaGov is a citizen engagement platform that enables the public to submit feedb
 - 📩 Submit and track complaints
 - 📁 Upload attachments
 - 🗂️ Role-based access (Admin, Agency Staff, Citizen)
+- 🧠 AI-powered complaint categorization, translation, and sentiment analysis
 - 🧭 RESTful API with JWT authentication
 - 📦 Built with Go + Gin + PostgreSQL + GORM
 
@@ -23,7 +24,7 @@ SomaGov is a citizen engagement platform that enables the public to submit feedb
 ```bash
 git clone https://github.com/your-username/SomaBackend.git
 cd SomaBackend
-````
+```
 
 ### 2. Setup environment variables
 
@@ -31,6 +32,7 @@ Create a `.env` file:
 
 ```env
 DATABASE_URL=postgres://<user>:<password>@<host>/<dbname>?sslmode=require
+HUGGINGFACE_TOKEN=your_huggingface_api_token
 ```
 
 Or use individual values if preferred:
@@ -41,7 +43,10 @@ DB_USER=...
 DB_PASSWORD=...
 DB_NAME=...
 DB_SSLMODE=require
+HUGGINGFACE_TOKEN=your_huggingface_api_token
 ```
+
+> 💡 `HUGGINGFACE_TOKEN` is used for AI features like complaint categorization and sentiment analysis.
 
 ### 3. Run locally with Air (for development)
 
@@ -81,16 +86,49 @@ startCommand: ./app
 ```
 SomaBackend/
 ├── config/        # DB connection and env setup
-├── controllers/   # Route handlers
+├── controllers/   # Route handlers (auth, complaints, admin, etc.)
 ├── middleware/    # Auth, logging
-├── models/        # GORM models
-├── routes/        # API route definitions
-├── services/      # Business logic
+├── models/        # GORM models (User, Complaint, etc.)
+├── routes/        # API route definitions grouped by module
+│   ├── auth.go
+│   ├── complaint.go
+│   ├── admin.go
+│   └── ...
+├── services/      # Business logic (including AI integration)
 ├── uploads/       # File uploads
 ├── utils/         # Helper functions
 ├── main.go        # Entry point
 └── .env           # Environment config
 ```
+
+---
+
+## 📘 How to Get Your AI API Keys
+
+### 1. 🔐 Hugging Face API Token
+
+- Go to: [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+- Click **“New token”**
+- Give it a name (e.g., `somagov-ai`)
+- Set role: **“Read”**
+- Copy the token and add it to your `.env` file as:
+
+```env
+HUGGINGFACE_TOKEN=your_generated_token_here
+```
+
+### 2. 🗣 LibreTranslate
+
+You're using a public instance:
+
+```
+https://translate.argosopentech.com/translate
+```
+
+If you want to **self-host** LibreTranslate:
+
+- Docker Image: [https://github.com/LibreTranslate/LibreTranslate](https://github.com/LibreTranslate/LibreTranslate)
+- Replace the URL in your `.env` or `ai_service.go` config.
 
 ---
 
@@ -121,4 +159,3 @@ Under development
 ## 👨‍💻 Author
 
 **Mr-Ndi** – [https://www.linkedin.com/in/mr-ndi/](#)
-
