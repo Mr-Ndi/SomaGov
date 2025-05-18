@@ -1,15 +1,16 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import Footer from './Footer';
 
 export const metadata: Metadata = {
   title: 'SomaGov',
   description: 'Citizen engagement platform for Rwanda',
   icons: {
     icon: [
-      { url: '/icon2.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
     ],
     apple: [
-      { url: '/icon2.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
     ],
   },
 };
@@ -21,7 +22,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
