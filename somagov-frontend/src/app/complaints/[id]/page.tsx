@@ -15,6 +15,12 @@ type Complaint = {
 export default function ComplaintDetailPage() {
   const { id } = useParams();
   const [complaint, setComplaint] = useState<Complaint | null>(null);
+  const [minDelayDone, setMinDelayDone] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinDelayDone(true), 25000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchComplaint = async () => {
@@ -25,7 +31,14 @@ export default function ComplaintDetailPage() {
     fetchComplaint();
   }, [id]);
 
-  if (!complaint) return <p className="p-8">Loading...</p>;
+  if (!complaint || !minDelayDone) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <main className="p-8 bg-background min-h-screen">

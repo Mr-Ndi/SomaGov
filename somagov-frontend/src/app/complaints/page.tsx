@@ -12,15 +12,30 @@ type Complaint = {
 
 export default function MyComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [minDelayDone, setMinDelayDone] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinDelayDone(true), 25000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
       const data = await apiRequest('/complaints/mine', 'GET', undefined, token || undefined);
-      setComplaints(data || []);
+      setComplaints(Array.isArray(data) ? data : []);
     };
     fetchData();
   }, []);
+
+  if (!minDelayDone || complaints.length === 0) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <main className="p-8 bg-background min-h-screen">

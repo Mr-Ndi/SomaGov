@@ -13,13 +13,19 @@ type Complaint = {
 
 export default function AdminComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [minDelayDone, setMinDelayDone] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinDelayDone(true), 25000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const token = localStorage.getItem('token');
         const data = await apiRequest<Complaint[]>('/admin/complaints?status=open&sort=latest', 'GET', undefined, token || undefined);
-        setComplaints(data || []);
+        setComplaints(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error loading complaints:', error);
       }
@@ -27,6 +33,15 @@ export default function AdminComplaintsPage() {
 
     fetchComplaints();
   }, []);
+
+  if (!minDelayDone || complaints.length === 0) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background text-gray-800 px-4 py-8">
