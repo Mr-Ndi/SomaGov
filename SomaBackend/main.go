@@ -6,13 +6,13 @@ import (
 
 	"somagov/config"
 	"somagov/routes"
+	"somagov/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -23,6 +23,11 @@ func main() {
 	// Connect to DB and handle any errors
 	if err := config.ConnectDB(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Seed initial data
+	if err := services.SeedInitialData(); err != nil {
+		log.Printf("Warning: Failed to seed initial data: %v", err)
 	}
 
 	// Register all routes

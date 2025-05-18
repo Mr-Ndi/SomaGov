@@ -51,7 +51,12 @@ func GetComplaintByID(id uint) (*models.Complaint, error) {
 
 func GetComplaintsByUser(userID uint) ([]models.Complaint, error) {
 	var complaints []models.Complaint
-	err := config.DB.Where("user_id = ?", userID).Find(&complaints).Error
+	err := config.DB.
+		Preload("User").
+		Preload("Category").
+		Preload("Agency").
+		Where("user_id = ?", userID).
+		Find(&complaints).Error
 	return complaints, err
 }
 
