@@ -43,8 +43,8 @@ func main() {
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: false, // Set to false when allowing all origins
-		MaxAge:           12 * 60 * 60, // 12 hours
+		AllowCredentials: false,
+		MaxAge:           12 * 60 * 60,
 	}))
 
 	// Create API group

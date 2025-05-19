@@ -12,18 +12,21 @@ import (
 )
 
 func Register(c *gin.Context) {
-	var user models.User
+	var input struct {
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required,min=6"`
+		Name     string `json:"name" binding:"required"`
+	}
 
 	// Bind and validate input
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input: " + err.Error()})
 		return
 	}
 
 	// Check if user with email already exists
-	existingUser, err := services.FindUserByEmail(user.Email)
+	existingUser, err := services.FindUserByEmail(input.Email)
 	if err != nil {
-		// optional: log error
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong while checking existing user"})
 		return
 	}
@@ -32,15 +35,22 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// Hash password mbere yo kuyibika
-	hashedPass, err := utils.HashPassword(user.Password)
+	// Create user model
+	user := models.User{
+		Email:    input.Email,
+		FullName: input.Name,
+		Role:     "user", // Default role
+	}
+
+	// Hash password
+	hashedPass, err := utils.HashPassword(input.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
 	user.Password = hashedPass
 
-	// Create user after satisfying all necessary conditions
+	// Create user
 	if err := services.CreateUser(&user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create user"})
 		return
