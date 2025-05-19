@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"somagov/database"
 	"somagov/models"
@@ -13,6 +15,9 @@ import (
 )
 
 func main() {
+	// Set release mode
+	gin.SetMode(gin.ReleaseMode)
+
 	// Load environment variables
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, using environment variables")
@@ -40,12 +45,43 @@ func main() {
 	routes.RegisterCitizenRoutes(api)
 	routes.RegisterAIRoutes(api)
 
-	// Start server
+	// Get port from environment or use default
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	if err := router.Run(":" + port); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+
+	// Create a channel to listen for errors coming from the listener.
+	serverErrors := make(chan error, 1)
+
+	// Start the service listening for requests.
+	go func() {
+		log.Printf("Server is starting on port %s", port)
+		serverErrors <- router.Run(":" + port)
+	}()
+
+	// Create a channel to listen for an interrupt or terminate signal from the OS.
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
+
+	// Blocking main and waiting for shutdown.
+	select {
+	case err := <-serverErrors:
+		if err != nil {
+			log.Printf("Error starting server: %v", err)
+			// Try alternative port if 8080 is in use
+			if err.Error() == "listen tcp :8080: bind: address already in use" {
+				altPort := "8081"
+				log.Printf("Port 8080 in use, trying port %s", altPort)
+				if err := router.Run(":" + altPort); err != nil {
+					log.Fatalf("Failed to start server on alternative port: %v", err)
+				}
+			} else {
+				log.Fatalf("Failed to start server: %v", err)
+			}
+		}
+
+	case sig := <-shutdown:
+		log.Printf("Shutdown signal received: %v", sig)
 	}
 }
