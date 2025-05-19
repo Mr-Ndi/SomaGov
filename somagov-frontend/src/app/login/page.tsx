@@ -2,6 +2,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+function decodeRoleFromJWT(token: string): string | null {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role || null;
+  } catch {
+    return null;
+  }
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
@@ -23,7 +32,15 @@ export default function LoginPage() {
 
     if (res.ok && data.token) {
       localStorage.setItem('token', data.token);
-      router.push('/complaints');
+      const role = decodeRoleFromJWT(data.token);
+      if (role) {
+        localStorage.setItem('role', role);
+      }
+      if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/complaints');
+      }
     } else {
       alert(data.message || 'Login failed.');
     }

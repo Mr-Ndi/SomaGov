@@ -3,9 +3,15 @@ import { useState, useEffect } from 'react';
 import { apiRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 
+interface Category { id: number; name: string; }
+interface Agency { id: number; name: string; }
+
 export default function NewComplaintPage() {
-  const [form, setForm] = useState({ location: '', description: '' });
+  const [form, setForm] = useState({ location: '', description: '', category_id: '', agency_id: '' });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(false);
+  const [metaLoading, setMetaLoading] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -13,10 +19,21 @@ export default function NewComplaintPage() {
     const token = localStorage.getItem('token');
     if (!token) {
       router.replace('/login');
+      return;
     }
+    // Fetch categories and agencies
+    Promise.all([
+      apiRequest('/categories', 'GET', undefined, token || undefined),
+      apiRequest('/agencies', 'GET', undefined, token || undefined),
+    ]).then(([cat, ag]) => {
+      setCategories(cat as Category[]);
+      setAgencies(ag as Agency[]);
+    }).catch(() => {
+      setError('Failed to load categories or agencies.');
+    }).finally(() => setMetaLoading(false));
   }, [router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -26,7 +43,12 @@ export default function NewComplaintPage() {
     setError('');
     const token = localStorage.getItem('token');
     try {
-      await apiRequest('/complaints', 'POST', form, token || undefined);
+      await apiRequest('/complaints', 'POST', {
+        location: form.location,
+        description: form.description,
+        category_id: Number(form.category_id),
+        agency_id: Number(form.agency_id),
+      }, token || undefined);
       alert('Complaint submitted.');
       router.push('/complaints');
     } catch (err: any) {
@@ -36,7 +58,7 @@ export default function NewComplaintPage() {
     }
   };
 
-  if (loading) {
+  if (loading || metaLoading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
@@ -66,6 +88,30 @@ export default function NewComplaintPage() {
           className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
           required
         />
+        <select
+          name="category_id"
+          value={form.category_id}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+          required
+        >
+          <option value="">Select Category</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </select>
+        <select
+          name="agency_id"
+          value={form.agency_id}
+          onChange={handleChange}
+          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+          required
+        >
+          <option value="">Select Agency</option>
+          {agencies.map(ag => (
+            <option key={ag.id} value={ag.id}>{ag.name}</option>
+          ))}
+        </select>
         <button type="submit" className="w-full bg-primary text-white py-3 rounded-md">
           Submit
         </button>

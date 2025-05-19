@@ -2,7 +2,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
 export async function apiRequest<T>(
   path: string,
-  method: 'GET' | 'POST' | 'PATCH' = 'GET',
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' = 'GET',
   body?: Record<string, unknown>,
   token?: string
 ): Promise<T> {
