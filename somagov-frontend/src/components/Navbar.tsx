@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation';
 export default function Navbar() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+    setRole(localStorage.getItem('role'));
   }, []);
 
   const handleLogout = () => {
@@ -35,14 +37,24 @@ export default function Navbar() {
           <Link href="/about" className="text-gray-700 hover:text-primary">
             About Us
           </Link>
-          {isLoggedIn && (
+          {isLoggedIn && role !== 'admin' && (
             <Link href="/complaints" className="text-gray-700 hover:text-primary">
               My Complaints
             </Link>
           )}
-          {isLoggedIn && (
+          {isLoggedIn && role !== 'admin' && (
             <Link href="/admin/complaints" className="text-gray-700 hover:text-primary">
               Admin Dashboard
+            </Link>
+          )}
+          {isLoggedIn && role === 'admin' && (
+            <Link href="/profile" className="text-gray-700 hover:text-primary">
+              Profile
+            </Link>
+          )}
+          {isLoggedIn && role === 'admin' && (
+            <Link href="/admin" className="text-gray-700 hover:text-primary">
+              Agencies
             </Link>
           )}
         </div>
@@ -54,9 +66,11 @@ export default function Navbar() {
               <Link href="/login" className="text-primary hover:underline">
                 Login
               </Link>
-              <Link href="/register" className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Register
-              </Link>
+              {role !== 'admin' && (
+                <Link href="/register" className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                  Register
+                </Link>
+              )}
             </>
           ) : (
             <button

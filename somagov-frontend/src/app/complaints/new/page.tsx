@@ -23,13 +23,13 @@ export default function NewComplaintPage() {
     }
     // Fetch categories and agencies
     Promise.all([
-      apiRequest('/categories', 'GET', undefined, token || undefined),
-      apiRequest('/agencies', 'GET', undefined, token || undefined),
+      apiRequest('/api/categories', 'GET', undefined, token || undefined),
+      apiRequest('/api/agencies', 'GET', undefined, token || undefined),
     ]).then(([cat, ag]) => {
       setCategories(cat as Category[]);
       setAgencies(ag as Agency[]);
     }).catch(() => {
-      setError('Failed to load categories or agencies.');
+      setError('No categories or agencies found.');
     }).finally(() => setMetaLoading(false));
   }, [router]);
 
@@ -71,7 +71,6 @@ export default function NewComplaintPage() {
     <main className="min-h-screen bg-background flex items-center justify-center">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-xl space-y-4">
         <h1 className="text-2xl font-semibold text-primary text-center">Submit a Complaint</h1>
-        {error && <div className="text-red-500 text-center">{error}</div>}
         <input
           name="location"
           type="text"
@@ -112,6 +111,7 @@ export default function NewComplaintPage() {
             <option key={ag.id} value={ag.id}>{ag.name}</option>
           ))}
         </select>
+        {error && <div className="text-red-500 text-center mb-2">{error}</div>}
         <button type="submit" className="w-full bg-primary text-white py-3 rounded-md">
           Submit
         </button>

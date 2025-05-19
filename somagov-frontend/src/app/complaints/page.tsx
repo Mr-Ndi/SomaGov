@@ -22,7 +22,7 @@ export default function MyComplaintsPage() {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
-      const data = await apiRequest('/complaints/mine', 'GET', undefined, token || undefined);
+      const data = await apiRequest('/api/complaints/mine', 'GET', undefined, token || undefined);
       setComplaints(Array.isArray(data) ? data : []);
     };
     fetchData();
