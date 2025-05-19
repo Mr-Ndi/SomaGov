@@ -13,7 +13,7 @@ type Complaint = {
 };
 
 export default function ComplaintDetailPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [complaint, setComplaint] = useState<Complaint | null>(null);
   const [minDelayDone, setMinDelayDone] = useState(false);
 
