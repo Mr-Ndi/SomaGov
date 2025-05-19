@@ -29,7 +29,7 @@ func Login(ctx context.Context, db *gorm.DB, email, password string) (string, er
 			// Try to seed the admin dynamically if credentials match
 			if email == adminEmail && password == adminPassword {
 				fmt.Println("Attempting to seed admin account")
-				if seedErr := SeedAdmin(db); seedErr != nil {
+				if seedErr := SeedAdminUser(db); seedErr != nil {
 					fmt.Printf("Failed to seed admin: %v\n", seedErr)
 					return "", errors.New("failed to auto-seed admin account")
 				}
@@ -81,37 +81,39 @@ func FindUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
-func SeedAdmin(db *gorm.DB) error {
-	adminEmail := os.Getenv("ADMAIL")
-	adminPassword := os.Getenv("ADPASSWORD")
+func SeedAdminUser(db *gorm.DB) error {
 
-	if adminEmail == "" || adminPassword == "" {
-		return errors.New("admin credentials not configured")
+	const adminEmail = "admin@soma.gov.rw"
+	const adminPassword = "admin123"
+
+	// Check if user exists
+	_, err := FindUserByEmail(adminEmail)
+	if err == nil {
+		// Admin already exists
+		fmt.Println("✅ Admin user already exists")
+		return nil
 	}
 
-	// Hash the admin password
-	hashedPass, err := utils.HashPassword(adminPassword)
+	// Hash password
+	hashedPassword, err := utils.HashPassword(adminPassword)
 	if err != nil {
 		return fmt.Errorf("failed to hash admin password: %w", err)
 	}
 
-	// Create admin user
+	// Create user
 	admin := models.User{
+		FullName: "System Admin",
 		Email:    adminEmail,
-		Password: hashedPass,
+		Password: hashedPassword,
 		Role:     "admin",
 	}
 
-	// Check if admin already exists
-	var existingAdmin models.User
-	if err := db.Where("email = ?", adminEmail).First(&existingAdmin).Error; err == nil {
-		// Admin already exists, update password
-		existingAdmin.Password = hashedPass
-		return db.Save(&existingAdmin).Error
+	if err := CreateUser(&admin); err != nil {
+		return fmt.Errorf("failed to create admin user: %w", err)
 	}
 
-	// Create new admin
-	return db.Create(&admin).Error
+	fmt.Println("✅ Admin user seeded: admin@soma.gov.rw / admin123")
+	return nil
 }
 
 func UpdateUserPassword(email, newPassword string) error {
