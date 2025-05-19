@@ -26,7 +26,7 @@ export default function ComplaintDetailPage() {
     const fetchComplaint = async () => {
       const token = localStorage.getItem('token');
       const data = await apiRequest(`/api/complaints/${id}`, 'GET', undefined, token || undefined);
-      setComplaint(data as Complaint);
+      setComplaint(data as unknown as Complaint);
     };
     fetchComplaint();
   }, [id]);
