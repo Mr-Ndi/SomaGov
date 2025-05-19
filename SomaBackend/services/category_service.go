@@ -1,12 +1,12 @@
 package services
 
 import (
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 )
 
 func GetAllCategories() ([]models.Category, error) {
 	var categories []models.Category
-	err := config.DB.Preload("Agency").Find(&categories).Error
+	err := database.DB.Preload("Agency").Find(&categories).Error
 	return categories, err
 }

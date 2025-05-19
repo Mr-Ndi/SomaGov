@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 )
 
@@ -19,7 +19,7 @@ func CreateComplaint(complaint *models.Complaint) error {
 
 	// Get all available categories
 	var categories []models.Category
-	if err := config.DB.Find(&categories).Error; err != nil {
+	if err := database.DB.Find(&categories).Error; err != nil {
 		return fmt.Errorf("failed to fetch categories: %w", err)
 	}
 
@@ -77,7 +77,7 @@ func CreateComplaint(complaint *models.Complaint) error {
 	complaint.TicketCode = fmt.Sprintf("TKT-%d", time.Now().Unix())
 
 	// Create the complaint
-	if err := config.DB.Create(complaint).Error; err != nil {
+	if err := database.DB.Create(complaint).Error; err != nil {
 		return fmt.Errorf("failed to create complaint: %w", err)
 	}
 
@@ -86,7 +86,7 @@ func CreateComplaint(complaint *models.Complaint) error {
 
 func GetComplaintByID(id uint) (*models.Complaint, error) {
 	var complaint models.Complaint
-	result := config.DB.Preload("User").Preload("Category").Preload("Agency").
+	result := database.DB.Preload("User").Preload("Category").Preload("Agency").
 		First(&complaint, id)
 	if result.Error != nil {
 		return nil, result.Error
@@ -96,7 +96,7 @@ func GetComplaintByID(id uint) (*models.Complaint, error) {
 
 func GetComplaintsByUser(userID uint) ([]models.Complaint, error) {
 	var complaints []models.Complaint
-	err := config.DB.
+	err := database.DB.
 		Preload("User").
 		Preload("Category").
 		Preload("Agency").
@@ -107,10 +107,10 @@ func GetComplaintsByUser(userID uint) ([]models.Complaint, error) {
 
 func UpdateComplaintStatus(id uint, newStatus string) error {
 	var complaint models.Complaint
-	if err := config.DB.First(&complaint, id).Error; err != nil {
+	if err := database.DB.First(&complaint, id).Error; err != nil {
 		return err
 	}
 	complaint.Status = newStatus
 	complaint.UpdatedAt = time.Now()
-	return config.DB.Save(&complaint).Error
+	return database.DB.Save(&complaint).Error
 }

@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"somagov/config"
 	"somagov/database"
 	"somagov/models"
 	"somagov/routes"
@@ -32,14 +31,14 @@ func main() {
 	// Set up router
 	router := gin.Default()
 
+	// Create API group
+	api := router.Group("/api")
+
 	// Register routes
-	routes.RegisterAuthRoutes(router)
-	routes.RegisterAgencyRoutes(router)
-	routes.RegisterCategoryRoutes(router)
-	routes.RegisterComplaintRoutes(router)
-	routes.RegisterUserRoutes(router)
-	routes.RegisterCitizenRoutes(router)
-	routes.RegisterAIRoutes(router)
+	routes.RegisterAuthRoutes(api)
+	routes.RegisterUserRoutes(api)
+	routes.RegisterCitizenRoutes(api)
+	routes.RegisterAIRoutes(api)
 
 	// Start server
 	port := os.Getenv("PORT")

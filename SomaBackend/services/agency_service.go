@@ -1,13 +1,13 @@
 package services
 
 import (
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 )
 
 func GetAllAgencies() ([]models.Agency, error) {
 	var agencies []models.Agency
-	err := config.DB.Preload("Categories").Find(&agencies).Error
+	err := database.DB.Preload("Categories").Find(&agencies).Error
 	return agencies, err
 }
 
@@ -26,7 +26,7 @@ func SeedInitialData() error {
 
 	// Create agencies and their categories
 	for i := range agencies {
-		if err := config.DB.Create(&agencies[i]).Error; err != nil {
+		if err := database.DB.Create(&agencies[i]).Error; err != nil {
 			return err
 		}
 
@@ -47,7 +47,7 @@ func SeedInitialData() error {
 		}
 
 		for j := range categories {
-			if err := config.DB.Create(&categories[j]).Error; err != nil {
+			if err := database.DB.Create(&categories[j]).Error; err != nil {
 				return err
 			}
 		}
