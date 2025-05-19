@@ -83,5 +83,5 @@ This is a community-driven project. Suggestions, feedback, and contributions are
 ## 👤 Author
 
 **Mr-Ndi**  
-🔗 [LinkedIn](https://www.linkedin.com/in/mr-ndi/)
-
+🔗 [LinkedIn](https://www.linkedin.com/in/mr-ndi/)  
+💻 [GitHub](https://github.com/Mr-Ndi/)
