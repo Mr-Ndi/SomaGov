@@ -28,12 +28,26 @@ export default function MyComplaintsPage() {
     fetchData();
   }, []);
 
-  if (!minDelayDone || complaints.length === 0) {
+  if (!minDelayDone) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
         <span className="sr-only">Loading...</span>
       </div>
+    );
+  }
+
+  if (complaints.length === 0) {
+    return (
+      <main className="p-8 bg-background min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold text-primary mb-6">My Complaints</h1>
+        <p className="text-gray-500 text-lg">No complaints found.</p>
+        <div className="flex justify-center mt-6">
+          <Link href="/complaints/new" className="bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+            Submit New Complaint
+          </Link>
+        </div>
+      </main>
     );
   }
 
