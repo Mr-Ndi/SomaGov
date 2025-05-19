@@ -19,7 +19,6 @@ interface Category { id: number; name: string; }
 export default function AdminPage() {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const router = useRouter();
 
   // Add Agency Form State
@@ -66,9 +65,8 @@ export default function AdminPage() {
       setLoading(true);
       const data = await apiRequest<Agency[]>("/api/agencies", "GET", undefined, token || undefined);
       setAgencies(Array.isArray(data) ? data : []);
-      setError("");
-    } catch (err) {
-      setAddError((err as Error)?.message || 'Failed to add agency.');
+    } catch (error) {
+      setAddError((error as Error)?.message || 'Failed to add agency.');
     } finally {
       setAddLoading(false);
       setLoading(false);
@@ -108,7 +106,7 @@ export default function AdminPage() {
       // PATCH or PUT to /api/agencies/:id/categories
       await apiRequest(`/api/agencies/${selectedAgency.id}/categories`, 'PATCH', { category_ids: selectedCategories }, token || undefined);
       setShowCatModal(false);
-    } catch (err) {
+    } catch {
       setCatError('Failed to assign categories.');
     } finally {
       setCatLoading(false);

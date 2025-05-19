@@ -10,7 +10,6 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [form, setForm] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,7 +24,6 @@ export default function ProfilePage() {
     }
     apiRequest<UserProfile>("/users/profile", "GET", undefined, token)
       .then((data) => {
-        setProfile(data);
         setForm({ name: data.name, email: data.email });
       })
       .catch(() => setError("Failed to load profile."))
