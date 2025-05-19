@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 	"somagov/utils"
 
@@ -67,12 +67,12 @@ func Login(ctx context.Context, db *gorm.DB, email, password string) (string, er
 }
 
 func CreateUser(user *models.User) error {
-	return config.DB.Create(user).Error
+	return database.DB.Create(user).Error
 }
 
 func FindUserByEmail(email string) (*models.User, error) {
 	var user models.User
-	if err := config.DB.Where("email = ?", email).First(&user).Error; err != nil {
+	if err := database.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -125,7 +125,7 @@ func UpdateUserPassword(email, newPassword string) error {
 		return fmt.Errorf("failed to hash password: %w", err)
 	}
 
-	result := config.DB.Model(&models.User{}).Where("email = ?", email).Update("password", hashedPass)
+	result := database.DB.Model(&models.User{}).Where("email = ?", email).Update("password", hashedPass)
 	if result.Error != nil {
 		return fmt.Errorf("failed to update password: %w", result.Error)
 	}

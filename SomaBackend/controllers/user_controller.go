@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 
 	"github.com/gin-gonic/gin"
@@ -48,7 +48,7 @@ func UpdateUserProfile(c *gin.Context) {
 		userModel.Password = updateData.Password
 	}
 
-	if err := config.DB.Save(&userModel).Error; err != nil {
+	if err := database.DB.Save(&userModel).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update profile"})
 		return
 	}
@@ -66,7 +66,7 @@ func GetUserComplaints(c *gin.Context) {
 	userModel := user.(models.User)
 
 	var complaints []models.Complaint
-	if err := config.DB.Where("user_id = ?", userModel.ID).Find(&complaints).Error; err != nil {
+	if err := database.DB.Where("user_id = ?", userModel.ID).Find(&complaints).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch complaints"})
 		return
 	}

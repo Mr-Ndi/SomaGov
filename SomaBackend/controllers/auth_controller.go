@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"somagov/config"
+	"somagov/database"
 	"somagov/models"
 	"somagov/services"
 	"somagov/utils"
@@ -60,7 +60,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := services.Login(c.Request.Context(), config.DB, loginData.Email, loginData.Password)
+	token, err := services.Login(c.Request.Context(), database.DB, loginData.Email, loginData.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
