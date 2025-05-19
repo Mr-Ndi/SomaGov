@@ -25,7 +25,7 @@ export default function ComplaintDetailPage() {
   useEffect(() => {
     const fetchComplaint = async () => {
       const token = localStorage.getItem('token');
-      const data = await apiRequest(`/complaints/${id}`, 'GET', undefined, token || undefined);
+      const data = await apiRequest(`/api/complaints/${id}`, 'GET', undefined, token || undefined);
       setComplaint(data as Complaint);
     };
     fetchComplaint();
