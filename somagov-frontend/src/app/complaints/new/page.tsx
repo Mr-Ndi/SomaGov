@@ -51,8 +51,8 @@ export default function NewComplaintPage() {
       }, token || undefined);
       alert('Complaint submitted.');
       router.push('/complaints');
-    } catch (err: any) {
-      setError(err.message || 'An error occurred.');
+    } catch (err) {
+      setError((err as Error)?.message || 'An error occurred.');
     } finally {
       setLoading(false);
     }

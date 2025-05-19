@@ -44,8 +44,8 @@ export default function ProfilePage() {
     try {
       await apiRequest("/users/profile", "PUT", form, token || undefined);
       alert("Profile updated.");
-    } catch (err: any) {
-      setError(err.message || "An error occurred.");
+    } catch (err) {
+      setError((err as Error)?.message || 'An error occurred.');
     } finally {
       setSaving(false);
     }

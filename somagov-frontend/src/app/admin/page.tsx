@@ -67,8 +67,8 @@ export default function AdminPage() {
       const data = await apiRequest<Agency[]>("/api/agencies", "GET", undefined, token || undefined);
       setAgencies(Array.isArray(data) ? data : []);
       setError("");
-    } catch (err: any) {
-      setAddError(err.message || 'Failed to add agency.');
+    } catch (err) {
+      setAddError((err as Error)?.message || 'Failed to add agency.');
     } finally {
       setAddLoading(false);
       setLoading(false);
@@ -108,7 +108,7 @@ export default function AdminPage() {
       // PATCH or PUT to /api/agencies/:id/categories
       await apiRequest(`/api/agencies/${selectedAgency.id}/categories`, 'PATCH', { category_ids: selectedCategories }, token || undefined);
       setShowCatModal(false);
-    } catch {
+    } catch (err) {
       setCatError('Failed to assign categories.');
     } finally {
       setCatLoading(false);
