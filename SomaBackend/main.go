@@ -10,6 +10,7 @@ import (
 	"somagov/models"
 	"somagov/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -35,6 +36,16 @@ func main() {
 
 	// Set up router
 	router := gin.Default()
+
+	// Configure CORS
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: false, // Set to false when allowing all origins
+		MaxAge:           12 * 60 * 60, // 12 hours
+	}))
 
 	// Create API group
 	api := router.Group("/api")
