@@ -41,7 +41,7 @@ Example translation request:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/SomaBackend.git
+git clone https://github.com/Mr-Ndi/SomaBackend.git
 cd SomaBackend
 ```
 
