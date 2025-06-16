@@ -47,6 +47,13 @@ func main() {
 		MaxAge:           12 * 60 * 60,
 	}))
 
+	// setting up a message for  home route
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Welcome to the SomanGov API! 🚀",
+		})
+	})
+
 	// Create API group
 	api := router.Group("/api")
 
