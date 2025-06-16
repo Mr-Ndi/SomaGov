@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiRequest } from '@/utils/api';
 
 function decodeRoleFromJWT(token: string): string | null {
   try {
@@ -19,30 +20,25 @@ export default function LoginPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    try {
+      const data = await apiRequest<{ token: string }>('/api/login', 'POST', form);
 
-    const data = await res.json();
-
-    if (res.ok && data.token) {
-      localStorage.setItem('token', data.token);
-      const role = decodeRoleFromJWT(data.token);
-      if (role) {
-        localStorage.setItem('role', role);
-      }
-      if (role === 'admin') {
-        router.push('/admin');
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        const role = decodeRoleFromJWT(data.token);
+        if (role) {
+          localStorage.setItem('role', role);
+          router.push(role === 'admin' ? '/admin' : '/complaints');
+        }
       } else {
-        router.push('/complaints');
+        alert('Login failed.');
       }
-    } else {
-      alert(data.message || 'Login failed.');
+    } catch (err: any) {
+      alert(err.message || 'Login error');
     }
   };
 
