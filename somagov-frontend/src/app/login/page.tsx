@@ -37,8 +37,9 @@ export default function LoginPage() {
       } else {
         alert('Login failed.');
       }
-    } catch (err: any) {
-      alert(err.message || 'Login error');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Login error';
+      alert(message);
     }
   };
 
