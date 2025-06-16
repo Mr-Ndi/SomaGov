@@ -146,7 +146,7 @@ export default function AdminPage() {
               <input name="email" value={addForm.email} onChange={handleAddChange} placeholder="Email" className="p-3 border rounded" required />
               <input name="phone" value={addForm.phone} onChange={handleAddChange} placeholder="Phone" className="p-3 border rounded" required />
               <input name="address" value={addForm.address} onChange={handleAddChange} placeholder="Address" className="p-3 border rounded" required />
-              <input name="code" value={addForm.code} onChange={handleAddChange} placeholder="Agency Code" className="p-3 border rounded" required />
+              {/* <input name="code" value={addForm.code} onChange={handleAddChange} placeholder="Agency Code" className="p-3 border rounded" required /> */}
             </div>
             <button type="submit" className="mt-4 bg-primary text-white px-5 py-2 rounded hover:bg-blue-700 transition" disabled={addLoading}>
               {addLoading ? 'Adding...' : 'Add Agency'}
