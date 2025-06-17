@@ -40,7 +40,7 @@ func CreateComplaint(complaint *models.Complaint) error {
 		for _, cat := range categories {
 			if cat.Name == bestCategory {
 				complaint.CategoryID = cat.ID
-				complaint.AgencyID = cat.AgencyID
+				complaint.AgencyID = cat.ID
 				break
 			}
 		}

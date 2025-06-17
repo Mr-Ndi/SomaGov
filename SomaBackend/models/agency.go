@@ -1,14 +1,12 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
-type Category struct {
-	ID        uint   `gorm:"primaryKey"`
-	Name      string `json:"name"`
-	AgencyID  uint   `json:"agency_id"`
-	Agency    Agency `gorm:"foreignKey:AgencyID"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+type Agency struct {
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	Name      string    `json:"name"`
+	Telephone string    `json:"telephone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

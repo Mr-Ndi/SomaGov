@@ -62,6 +62,7 @@ func main() {
 	routes.RegisterUserRoutes(api)
 	routes.RegisterCitizenRoutes(api)
 	routes.RegisterAIRoutes(api)
+	routes.RegisterAgencyRoutes(api)
 
 	// Get port from environment or use default
 	port := os.Getenv("PORT")

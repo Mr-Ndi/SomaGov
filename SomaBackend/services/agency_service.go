@@ -7,51 +7,31 @@ import (
 
 func GetAllAgencies() ([]models.Agency, error) {
 	var agencies []models.Agency
-	err := database.DB.Preload("Categories").Find(&agencies).Error
+	err := database.DB.Find(&agencies).Error
 	return agencies, err
 }
 
-func SeedInitialData() error {
-	// Create initial agencies
-	agencies := []models.Agency{
-		{
-			Name:        "Roads and Infrastructure",
-			Description: "Handles road maintenance and infrastructure issues",
-		},
-		{
-			Name:        "Public Health",
-			Description: "Handles public health and sanitation issues",
-		},
+func CreateAgency(agency *models.Agency) error {
+	return database.DB.Create(agency).Error
+}
+
+func DeleteAgency(id uint) error {
+	return database.DB.Delete(&models.Agency{}, id).Error
+}
+
+func GetAgencyByID(id uint) (models.Agency, error) {
+	var agency models.Agency
+	err := database.DB.First(&agency, id).Error
+	return agency, err
+}
+
+func UpdateAgency(id uint, updated *models.Agency) error {
+	var agency models.Agency
+	if err := database.DB.First(&agency, id).Error; err != nil {
+		return err
 	}
-
-	// Create agencies and their categories
-	for i := range agencies {
-		if err := database.DB.Create(&agencies[i]).Error; err != nil {
-			return err
-		}
-
-		// Create categories for each agency
-		categories := []models.Category{
-			{
-				Name:     "Potholes",
-				AgencyID: agencies[i].ID,
-			},
-			{
-				Name:     "Street Lights",
-				AgencyID: agencies[i].ID,
-			},
-			{
-				Name:     "Drainage",
-				AgencyID: agencies[i].ID,
-			},
-		}
-
-		for j := range categories {
-			if err := database.DB.Create(&categories[j]).Error; err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
+	agency.Name = updated.Name
+	agency.Telephone = updated.Telephone
+	agency.Address = updated.Address
+	return database.DB.Save(&agency).Error
 }
