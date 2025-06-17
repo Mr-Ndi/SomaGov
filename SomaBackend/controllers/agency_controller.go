@@ -20,6 +20,11 @@ func GetAgencies(c *gin.Context) {
 }
 
 func CreateAgency(c *gin.Context) {
+	role := c.GetString("role")
+	if role != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Only admin can create agencies"})
+		return
+	}
 	var agency models.Agency
 	if err := c.ShouldBindJSON(&agency); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

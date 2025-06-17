@@ -3,7 +3,23 @@ package services
 import (
 	"somagov/database"
 	"somagov/models"
+
+	"golang.org/x/crypto/bcrypt"
 )
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CreateAgency(agency *models.Agency) error {
+	hashedPassword, err := hashPassword(agency.Password)
+	if err != nil {
+		return err
+	}
+	agency.Password = hashedPassword
+	return database.DB.Create(agency).Error
+}
 
 func GetAllAgencies() ([]models.Agency, error) {
 	var agencies []models.Agency
@@ -11,9 +27,9 @@ func GetAllAgencies() ([]models.Agency, error) {
 	return agencies, err
 }
 
-func CreateAgency(agency *models.Agency) error {
-	return database.DB.Create(agency).Error
-}
+// func CreateAgency(agency *models.Agency) error {
+// 	return database.DB.Create(agency).Error
+// }
 
 func DeleteAgency(id uint) error {
 	return database.DB.Delete(&models.Agency{}, id).Error

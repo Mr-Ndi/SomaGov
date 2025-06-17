@@ -8,6 +8,7 @@ type Agency struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
+	Password  string    `json:"-"`
 	Telephone string    `json:"telephone"`
 	Address   string    `json:"address"`
 	Status    string    `json:"status"`
