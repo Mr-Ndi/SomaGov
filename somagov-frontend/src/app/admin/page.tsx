@@ -120,7 +120,7 @@ export default function AdminPage() {
     // Refresh agency list
     setAgencies(prev => prev.filter(agency => agency.id !== id));
   } catch (error) {
-    alert('Failed to delete agency.');
+    console.error('Failed to delete agency:', error);
   }
 };
 
