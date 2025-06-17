@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/utils/api";
-import { Dialog } from '@headlessui/react';
+import { Dialog } from "@headlessui/react";
 
 interface Agency {
   id: number;
@@ -12,11 +12,22 @@ interface Agency {
   status: string;
   address: string;
   code: string;
+  password?: string;
 }
 
 interface Category {
   id: number;
   name: string;
+}
+
+interface NewAgencyForm {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  status: string;
+  code: string;
+  password: string;
 }
 
 export default function AdminPage() {
@@ -25,15 +36,23 @@ export default function AdminPage() {
   const router = useRouter();
 
   const [showAdd, setShowAdd] = useState(false);
-  const [addForm, setAddForm] = useState({ name: '', email: '', phone: '', address: '', status: 'Active', code: '' });
+  const [addForm, setAddForm] = useState<NewAgencyForm>({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    status: "Active",
+    code: "",
+    password: "",
+  });
   const [addLoading, setAddLoading] = useState(false);
-  const [addError, setAddError] = useState('');
+  const [addError, setAddError] = useState("");
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedAgency, setSelectedAgency] = useState<Agency | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [catLoading, setCatLoading] = useState(false);
-  const [catError, setCatError] = useState('');
+  const [catError, setCatError] = useState("");
   const [showCatModal, setShowCatModal] = useState(false);
 
   useEffect(() => {
@@ -57,17 +76,25 @@ export default function AdminPage() {
   const handleAddAgency = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddLoading(true);
-    setAddError('');
-    const token = localStorage.getItem('token');
+    setAddError("");
+    const token = localStorage.getItem("token");
     try {
-      await apiRequest('/api/agencies', 'POST', addForm, token || undefined);
+      await apiRequest("/api/agencies", "POST", addForm as unknown as Record<string, unknown>, token || undefined);
       setShowAdd(false);
-      setAddForm({ name: '', email: '', phone: '', address: '', status: 'Active', code: '' });
+      setAddForm({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        status: "Active",
+        code: "",
+        password: "",
+      });
       setLoading(true);
       const data = await apiRequest<Agency[]>("/api/agencies", "GET", undefined, token || undefined);
       setAgencies(Array.isArray(data) ? data : []);
     } catch (error) {
-      setAddError((error as Error)?.message || 'Failed to add agency.');
+      setAddError((error as Error)?.message || "Failed to add agency.");
     } finally {
       setAddLoading(false);
       setLoading(false);
@@ -78,13 +105,13 @@ export default function AdminPage() {
     setSelectedAgency(agency);
     setCatLoading(true);
     setShowCatModal(true);
-    setCatError('');
-    const token = localStorage.getItem('token');
+    setCatError("");
+    const token = localStorage.getItem("token");
     try {
       const cats = await apiRequest<Category[]>("/api/categories", "GET", undefined, token || undefined);
       setCategories(Array.isArray(cats) ? cats : []);
     } catch {
-      setCatError('Failed to load categories.');
+      setCatError("Failed to load categories.");
     } finally {
       setCatLoading(false);
     }
@@ -99,31 +126,35 @@ export default function AdminPage() {
   const handleAssignCategories = async () => {
     if (!selectedAgency) return;
     setCatLoading(true);
-    setCatError('');
-    const token = localStorage.getItem('token');
+    setCatError("");
+    const token = localStorage.getItem("token");
     try {
-      await apiRequest(`/api/agencies/${selectedAgency.id}/categories`, 'PATCH', { category_ids: selectedCategories }, token || undefined);
+      await apiRequest(
+        `/api/agencies/${selectedAgency.id}/categories`,
+        "PATCH",
+        { category_ids: selectedCategories },
+        token || undefined
+      );
       setShowCatModal(false);
     } catch {
-      setCatError('Failed to assign categories.');
+      setCatError("Failed to assign categories.");
     } finally {
       setCatLoading(false);
     }
   };
+
   const handleDeleteAgency = async (id: number) => {
-  const confirmed = window.confirm("Are you sure you want to delete this agency?");
-  if (!confirmed) return;
+    const confirmed = window.confirm("Are you sure you want to delete this agency?");
+    if (!confirmed) return;
 
-  const token = localStorage.getItem('token');
-  try {
-    await apiRequest(`/api/agencies/${id}`, 'DELETE', undefined, token || undefined);
-    // Refresh agency list
-    setAgencies(prev => prev.filter(agency => agency.id !== id));
-  } catch (error) {
-    console.error('Failed to delete agency:', error);
-  }
-};
-
+    const token = localStorage.getItem("token");
+    try {
+      await apiRequest(`/api/agencies/${id}`, "DELETE", undefined, token || undefined);
+      setAgencies((prev) => prev.filter((agency) => agency.id !== id));
+    } catch (error) {
+      console.error("Failed to delete agency:", error);
+    }
+  };
 
   if (loading) {
     return (
@@ -145,7 +176,7 @@ export default function AdminPage() {
             onClick={() => setShowAdd(!showAdd)}
             className="bg-primary text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
           >
-            {showAdd ? 'Cancel' : '➕ Add Agency'}
+            {showAdd ? "Cancel" : "➕ Add Agency"}
           </button>
         </div>
 
@@ -156,14 +187,63 @@ export default function AdminPage() {
           >
             <h3 className="text-lg font-semibold text-gray-700 mb-4">New Agency Details</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input name="name" value={addForm.name} onChange={handleAddChange} placeholder="Name" className="p-3 border rounded" required />
-              <input name="email" value={addForm.email} onChange={handleAddChange} placeholder="Email" className="p-3 border rounded" required />
-              <input name="phone" value={addForm.phone} onChange={handleAddChange} placeholder="Phone" className="p-3 border rounded" required />
-              <input name="address" value={addForm.address} onChange={handleAddChange} placeholder="Address" className="p-3 border rounded" required />
-              {/* <input name="code" value={addForm.code} onChange={handleAddChange} placeholder="Agency Code" className="p-3 border rounded" required /> */}
+              <input
+                name="name"
+                value={addForm.name}
+                onChange={handleAddChange}
+                placeholder="Name"
+                className="p-3 border rounded"
+                required
+              />
+              <input
+                name="email"
+                type="email"
+                value={addForm.email}
+                onChange={handleAddChange}
+                placeholder="Email"
+                className="p-3 border rounded"
+                required
+              />
+              <input
+                name="phone"
+                value={addForm.phone}
+                onChange={handleAddChange}
+                placeholder="Phone"
+                className="p-3 border rounded"
+                required
+              />
+              <input
+                name="address"
+                value={addForm.address}
+                onChange={handleAddChange}
+                placeholder="Address"
+                className="p-3 border rounded"
+                required
+              />
+              <input
+                name="code"
+                value={addForm.code}
+                onChange={handleAddChange}
+                placeholder="Agency Code"
+                className="p-3 border rounded"
+                required
+              />
+              <input
+                name="password"
+                type="password"
+                value={addForm.password}
+                onChange={handleAddChange}
+                placeholder="Password"
+                className="p-3 border rounded"
+                required
+              />
             </div>
-            <button type="submit" className="mt-4 bg-primary text-white px-5 py-2 rounded hover:bg-blue-700 transition" disabled={addLoading}>
-              {addLoading ? 'Adding...' : 'Add Agency'}
+            <button
+              type="submit"
+              className="mt-4 bg-primary text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+              disabled={addLoading}
+            >
+              {addLoading ? "Adding..." : "Add Agency"}
             </button>
             {addError && <p className="text-red-500 mt-2">{addError}</p>}
           </form>
@@ -221,17 +301,23 @@ export default function AdminPage() {
 
         {/* Category Assignment Modal */}
         {showCatModal && selectedAgency && (
-          <Dialog open={showCatModal} onClose={() => setShowCatModal(false)} className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+          <Dialog
+            open={showCatModal}
+            onClose={() => setShowCatModal(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
+          >
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
               <h2 className="text-lg font-semibold mb-4">
                 Assign Categories to <span className="text-primary">{selectedAgency.name}</span>
               </h2>
               {catError && <p className="text-red-500 mb-2">{catError}</p>}
               {catLoading ? (
-                <div className="flex justify-center"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full"></div></div>
+                <div className="flex justify-center">
+                  <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full"></div>
+                </div>
               ) : (
                 <div className="space-y-2 mb-4">
-                  {categories.map(cat => (
+                  {categories.map((cat) => (
                     <label key={cat.id} className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -244,7 +330,12 @@ export default function AdminPage() {
                 </div>
               )}
               <div className="flex justify-end gap-2 mt-4">
-                <button onClick={() => setShowCatModal(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">Cancel</button>
+                <button
+                  onClick={() => setShowCatModal(false)}
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+                >
+                  Cancel
+                </button>
                 <button
                   onClick={handleAssignCategories}
                   className="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition"
