@@ -220,14 +220,14 @@ export default function AdminPage() {
                 className="p-3 border rounded"
                 required
               />
-              <input
+              {/* <input
                 name="code"
                 value={addForm.code}
                 onChange={handleAddChange}
                 placeholder="Agency Code"
                 className="p-3 border rounded"
                 required
-              />
+              /> */}
               <input
                 name="password"
                 type="password"
