@@ -10,15 +10,30 @@ export default function Navbar() {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-    setRole(localStorage.getItem('role'));
+    const syncAuth = () => {
+      const token = localStorage.getItem('token');
+      const storedRole = localStorage.getItem('role');
+      setIsLoggedIn(!!token);
+      setRole(storedRole);
+    };
+
+    syncAuth()
+
+
+    window.addEventListener('storage', syncAuth);
+
+    return () => {
+      window.removeEventListener('storage', syncAuth);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     setIsLoggedIn(false);
+    setRole(null);
     router.push('/login');
+
   };
 
   return (
@@ -67,7 +82,10 @@ export default function Navbar() {
                 Login
               </Link>
               {role !== 'admin' && (
-                <Link href="/register" className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                <Link
+                  href="/register"
+                  className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                >
                   Register
                 </Link>
               )}
