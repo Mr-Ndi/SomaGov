@@ -2,7 +2,7 @@ const API_BASE = 'https://somagov.onrender.com';
 
 export async function apiRequest<T>(
   path: string,
-  method: 'GET' | 'POST' | 'PATCH' | 'PUT' = 'GET',
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE' = 'GET',
   body?: Record<string, unknown>,
   token?: string
 ): Promise<T> {

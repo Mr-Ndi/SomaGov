@@ -110,6 +110,20 @@ export default function AdminPage() {
       setCatLoading(false);
     }
   };
+  const handleDeleteAgency = async (id: number) => {
+  const confirmed = window.confirm("Are you sure you want to delete this agency?");
+  if (!confirmed) return;
+
+  const token = localStorage.getItem('token');
+  try {
+    await apiRequest(`/api/agencies/${id}`, 'DELETE', undefined, token || undefined);
+    // Refresh agency list
+    setAgencies(prev => prev.filter(agency => agency.id !== id));
+  } catch (error) {
+    alert('Failed to delete agency.');
+  }
+};
+
 
   if (loading) {
     return (
@@ -190,6 +204,12 @@ export default function AdminPage() {
                         className="text-blue-600 underline hover:text-blue-800 transition"
                       >
                         Assign Categories
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAgency(agency.id)}
+                        className="ml-3 text-red-600 underline hover:text-red-800 transition"
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>
