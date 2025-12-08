@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { toast } from 'react-hot-toast';
 import SlidingFeatures from '@/components/SlidingFeatures';
 
 export default function RegisterPage() {
@@ -16,17 +17,27 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (res.ok) {
-      router.push('/login');
-    } else {
-      alert(data.message || data.error || 'Something happened');
+    try {
+      console.log('Registering with API:', `${process.env.NEXT_PUBLIC_API_BASE}/api/register`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      setLoading(false);
+
+      if (res.ok) {
+        toast.success('Account created successfully! Redirecting to login...');
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      } else {
+        toast.error(data.message || data.error || 'Registration failed');
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error('An error occurred. Please try again.');
     }
   };
 

@@ -1,4 +1,5 @@
-const API_BASE = 'https://somagov.onrender.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://somagov.onrender.com';
+console.log('API Base URL:', API_BASE);
 
 export async function apiRequest<T>(
   path: string,

@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from 'react-hot-toast';
+
+// ... existing imports
+
 export default function RootLayout({
   children,
 }: {
@@ -25,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
+        <Toaster position="top-center" />
         <Navbar />
         <GradientWrapper>
           {children}
