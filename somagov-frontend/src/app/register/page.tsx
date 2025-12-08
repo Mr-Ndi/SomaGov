@@ -38,44 +38,50 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-white border border-blue-200 p-8 rounded-xl shadow-md w-full max-w-md space-y-4">
-        <h1 className="text-2xl font-semibold text-primary text-center">Register</h1>
+    <main className="min-h-screen bg-background">
+      <section className="bg-primary text-white py-16 px-6 text-center">
+        <h1 className="text-4xl font-bold mb-4">Join SomaGov</h1>
+        <p className="text-lg">Create an account to report issues and help improve public services.</p>
+      </section>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          required
-        />
+      <div className="flex justify-center p-10">
+        <form onSubmit={handleSubmit} className="bg-white border border-blue-100 p-8 rounded-lg shadow w-full max-w-md space-y-4">
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          required
-        />
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          required
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            required
+          />
 
-        <button
-          type="submit"
-          className="w-full bg-primary text-white py-3 rounded-md hover:bg-primary-dark transition"
-        >
-          Create Account
-        </button>
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-primary text-white py-3 rounded-md hover:bg-primary-dark transition"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
     </main>
   );
 }
