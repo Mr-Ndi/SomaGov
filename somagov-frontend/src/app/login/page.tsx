@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiRequest } from '@/utils/api';
+import SlidingFeatures from '@/components/SlidingFeatures';
 
 function decodeRoleFromJWT(token: string): string | null {
   try {
@@ -43,18 +44,18 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background flex flex-col">
       <section className="bg-primary text-white py-16 px-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
         <p className="text-lg">Sign in to continue reporting issues and tracking progress.</p>
       </section>
 
-      <div className="flex justify-center p-10">
+      <div className="flex-grow flex flex-col items-center justify-center p-10">
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-blue-100 shadow rounded-lg p-8 sm:p-10 w-full max-w-md space-y-6"
+          className="bg-white border border-blue-100 shadow rounded-lg p-8 sm:p-12 w-full max-w-lg space-y-6 mb-12"
         >
-
+          {/* ... existing form fields ... */}
           <div className="space-y-4">
             <input
               type="email"
@@ -82,6 +83,8 @@ export default function LoginPage() {
           </button>
         </form>
       </div>
+
+      <SlidingFeatures />
     </main>
   );
 }

@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import SlidingFeatures from '@/components/SlidingFeatures';
+
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -38,14 +40,14 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background flex flex-col">
       <section className="bg-primary text-white py-16 px-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Join SomaGov</h1>
         <p className="text-lg">Create an account to report issues and help improve public services.</p>
       </section>
 
-      <div className="flex justify-center p-10">
-        <form onSubmit={handleSubmit} className="bg-white border border-blue-100 p-8 rounded-lg shadow w-full max-w-md space-y-4">
+      <div className="flex-grow flex flex-col items-center justify-center p-10">
+        <form onSubmit={handleSubmit} className="bg-white border border-blue-100 p-8 rounded-lg shadow w-full max-w-lg space-y-4 mb-12">
 
           <input
             type="text"
@@ -82,6 +84,8 @@ export default function RegisterPage() {
           </button>
         </form>
       </div>
+
+      <SlidingFeatures />
     </main>
   );
 }
