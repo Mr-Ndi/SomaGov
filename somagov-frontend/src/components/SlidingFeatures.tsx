@@ -16,11 +16,11 @@ export default function SlidingFeatures() {
                     {[...features, ...features].map((feature, index) => (
                         <div
                             key={index}
-                            className="mx-4 w-64 bg-white p-6 rounded-xl shadow-md border border-blue-50 flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
+                            className="mx-4 w-64 bg-primary p-6 rounded-xl shadow-md border border-transparent flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
                         >
                             <div className="text-4xl mb-3">{feature.icon}</div>
-                            <h3 className="text-lg font-semibold text-primary mb-2">{feature.title}</h3>
-                            <p className="text-sm text-gray-600 whitespace-normal">{feature.desc}</p>
+                            <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
+                            <p className="text-sm text-blue-100 whitespace-normal">{feature.desc}</p>
                         </div>
                     ))}
                 </div>
