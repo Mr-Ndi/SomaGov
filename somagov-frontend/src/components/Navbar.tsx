@@ -21,9 +21,11 @@ export default function Navbar() {
 
 
     window.addEventListener('storage', syncAuth);
+    window.addEventListener('auth-change', syncAuth);
 
     return () => {
       window.removeEventListener('storage', syncAuth);
+      window.removeEventListener('auth-change', syncAuth);
     };
   }, []);
 

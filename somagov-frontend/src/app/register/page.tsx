@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'react-hot-toast';
 import SlidingFeatures from '@/components/SlidingFeatures';
+import PageHeader from '@/components/PageHeader';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -52,10 +53,10 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
-      <section className="bg-primary text-white py-16 px-6 text-center">
-        <h1 className="text-4xl font-bold mb-4">Join SomaGov</h1>
-        <p className="text-lg">Create an account to report issues and help improve public services.</p>
-      </section>
+      <PageHeader
+        title="Join SomaGov"
+        description="Create an account to report issues and help improve public services."
+      />
 
       <div className="flex-grow flex flex-col items-center justify-center p-10">
         <form onSubmit={handleSubmit} className="bg-white border border-blue-100 p-8 rounded-lg shadow w-full max-w-lg space-y-4 mb-12">
