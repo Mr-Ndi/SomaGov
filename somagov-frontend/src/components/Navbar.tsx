@@ -1,5 +1,6 @@
-'use client';
 
+"use client";
+import React from 'react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -59,20 +60,19 @@ export default function Navbar() {
               My Complaints
             </Link>
           )}
-          {isLoggedIn && role !== 'admin' && (
-            <Link href="/admin/complaints" className="text-gray-700 hover:text-primary">
-              Admin Dashboard
-            </Link>
-          )}
+          {/* Only show Admin Dashboard for admin users */}
           {isLoggedIn && role === 'admin' && (
-            <Link href="/profile" className="text-gray-700 hover:text-primary">
-              Profile
-            </Link>
-          )}
-          {isLoggedIn && role === 'admin' && (
-            <Link href="/admin" className="text-gray-700 hover:text-primary">
-              Agencies
-            </Link>
+            <>
+              <Link href="/admin/complaints" className="text-gray-700 hover:text-primary">
+                Admin Dashboard
+              </Link>
+              <Link href="/profile" className="text-gray-700 hover:text-primary">
+                Profile
+              </Link>
+              <Link href="/admin" className="text-gray-700 hover:text-primary">
+                Agencies
+              </Link>
+            </>
           )}
         </div>
 

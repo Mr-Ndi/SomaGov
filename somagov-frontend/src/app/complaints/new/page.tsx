@@ -68,54 +68,68 @@ export default function NewComplaintPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-xl space-y-4">
-        <h1 className="text-2xl font-semibold text-primary text-center">Submit a Complaint</h1>
-        <input
-          name="location"
-          type="text"
-          placeholder="e.g. Gasabo"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
-          required
-        />
-        <textarea
-          name="description"
-          rows={4}
-          placeholder="Describe the issue"
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
-          required
-        />
-        <select
-          name="category_id"
-          value={form.category_id}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
-          ))}
-        </select>
-        <select
-          name="agency_id"
-          value={form.agency_id}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
-          required
-        >
-          <option value="">Select Agency</option>
-          {agencies.map(ag => (
-            <option key={ag.id} value={ag.id}>{ag.name}</option>
-          ))}
-        </select>
-        {error && <div className="text-red-500 text-center mb-2">{error}</div>}
-        <button type="submit" className="w-full bg-primary text-white py-3 rounded-md">
-          Submit
-        </button>
-      </form>
+    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
+      {/* Hero Section */}
+      <section className="bg-primary text-white py-16 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4">Submit Your Complaint</h1>
+          <p className="text-lg opacity-90">
+            Your voice matters. Report issues and help us improve public services in Rwanda.
+          </p>
+        </div>
+      </section>
+
+      <div className="flex-grow flex flex-col items-center justify-center p-10">
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-xl space-y-4">
+          <h2 className="text-2xl font-semibold text-primary text-center">Submit a Complaint</h2>
+          <input
+            name="location"
+            type="text"
+            placeholder="e.g. Gasabo"
+            value={form.location}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+            required
+          />
+          <textarea
+            name="description"
+            rows={4}
+            placeholder="Describe the issue"
+            value={form.description}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+            required
+          />
+          <select
+            name="category_id"
+            value={form.category_id}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+            required
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+          <select
+            name="agency_id"
+            value={form.agency_id}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary"
+            required
+          >
+            <option value="">Select Agency</option>
+            {agencies.map((ag) => (
+              <option key={ag.id} value={ag.id}>{ag.name}</option>
+            ))}
+          </select>
+          {error && <div className="text-red-500 text-center mb-2">{error}</div>}
+          <button type="submit" className="w-full bg-primary text-white py-3 rounded-md hover:bg-blue-700 transition">
+            Submit Complaint
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

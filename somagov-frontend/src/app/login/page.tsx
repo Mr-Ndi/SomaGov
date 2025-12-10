@@ -32,10 +32,13 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem('token', data.token);
         const role = decodeRoleFromJWT(data.token);
+        toast.success('Login successful!');
         if (role) {
           localStorage.setItem('role', role);
           window.dispatchEvent(new Event('auth-change'));
-          router.push(role === 'admin' ? '/admin' : '/complaints');
+          setTimeout(() => {
+            router.push(role === 'admin' ? '/admin' : '/complaints');
+          }, 1200);
         }
       } else {
         toast.error('Wrong credentials');
